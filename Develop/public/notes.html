@@ -81,7 +81,7 @@
 
     var currentURL = window.location.origin;
 
-    $.post(currentURL + "/api/notes". newNote, (data) => {
+    $.post(currentURL + "/api/notes", newNote, (data) => {
       if (data === true){
         alert("Your note was saved.");
       }
@@ -91,7 +91,7 @@
 
       $('#note-title').val("");
       $('#note-text').val("");
-    });
+    })
   });
 runJournalQuery();
 
