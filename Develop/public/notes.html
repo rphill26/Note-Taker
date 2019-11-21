@@ -17,26 +17,84 @@
     <a class="navbar-brand" href="/">Note Taker
     </a>
     <div class="icons">
-      <i class="fas fa-save text-light save-note"></i>
-      <i class="fas fa-pen text-light new-note"></i>
+      <button id="save" class="btn"><i class="fas fa-save text-light save-note"></i></button>
+      <button id="new" class="btn"><i class="fas fa-pen text-light new-note"></i></button>
+      
     </div>
   </nav>
   <div class="container-fluid">
     <div class="row">
       <div class="col-4 list-container">
         <div class="card">
-          <ul class="list-group">
+          <ul id="note-list" class="list-group">
           </ul>
         </div>
       </div>
       <div class="col-8">
-        <input class="note-title" placeholder="Note Title" maxlength="28" type="text">
-        <textarea class="note-textarea" placeholder="Note Text"></textarea>
+        <input id="note-title" class="note-title" placeholder="Note Title" maxlength="28" type="text">
+        <textarea id="note-text" class="note-textarea" placeholder="Note Text"></textarea>
       </div>
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="/assets/js/index.js"></script>
+  <script src="/Develop/public/assets/js/index.js"></script>
 </body>
+
+<script type="text/javascript">
+  runJournalQuery = () => {
+    var currentURL = window.location.origin;
+
+    $.ajax ({
+      url: currentURL + "/api/notes", 
+    method: "GET"
+  }).done (function(journalData){
+    console.log("_________________________________");
+    console.log("URL: " + currentURL + "/api/notes");
+    console.log("_________________________________");
+    console.log(journalData);
+    console.log("_________________________________");
+
+    for (var i=0; i<journalData.length; i++){
+      console.log(journalData[i]);
+
+      var journalEntry = $("<div>");
+      journalEntry.addClass('note');
+      journalEntry.attr('id', journalData[i].title);
+      $('#note-list').append(journalEntry)  ;
+
+      var journalTitle = journalData[i].title;
+      var journalBody = journalData[i].body;
+
+      $('#' + journalTitle).append('<h3>' + journalTitle + '</h3><br><span>' + journalBody + '</span>');
+    }
+  }); 
+
+  }
+  
+
+  $('#save').on("click", () => {
+    var newNote = {
+      title: $('#note-title').val().trim(),
+      body: $('#note-text').val().trim()
+    };
+    console.log(newNote);
+
+    var currentURL = window.location.origin;
+
+    $.post(currentURL + "/api/notes". newNote, (data) => {
+      if (data === true){
+        alert("Your note was saved.");
+      }
+      if (data === false){
+        alert("Your note was NOT saved.");
+      }
+
+      $('#note-title').val("");
+      $('#note-text').val("");
+    });
+  });
+runJournalQuery();
+
+</script>
 
 </html>
