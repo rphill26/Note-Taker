@@ -46,7 +46,7 @@ app.delete("/api/notes/:id", (req, res) => {
     JSON.stringify(db.filter(note => note.id !== parseInt(req.params.id))),
     err => {
       if (err) throw err;
-      // res.json(db)
+
       res.send("Deleted");
     }
   );
